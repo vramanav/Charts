@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://www.gstatic.com/charts/loader.js"></script> <!-- External Library (if needed) -->
+  <style>
+    /* Add your CSS styles here */
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="chart_div" style="width: 300px; height: 170px;"></div>
+
+  <script>
+    // Paste your JavaScript here
+    google.charts.load('current', {
+      packages: ['corechart', 'bar']
+    });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ['Job Status', 'Count', {
+          role: 'style'
+        }],
+        ['Received', 25, '#1f77b4'],
+        ['Delivered', 18, '#ff7f0e'],
+        ['Invoiced', 12, '#2ca02c'],
+        ['In Progress', 20, '#d62728'],
+        ['Incomplete', 8, '#9467bd'],
+        ['Problematic', 5, '#8c564b']
+      ]);
+      var options = {
+        title: 'Job Status',
+        titleTextStyle: {
+          fontSize: 14,
+          bold: true
+        },
+        chartArea: {
+          width: '70%',
+          height: '60%'
+        },
+        hAxis: {
+          title: '',
+          slantedText: true,
+          slantedTextAngle: 45
+        },
+        vAxis: {
+          title: 'Number of Jobs',
+          minValue: 0,
+          ticks: [0, 5, 10, 15, 20, 25, 30]
+        },
+        legend: 'none'
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+    }
+  </script>
+
+</body>
+
+</html>
