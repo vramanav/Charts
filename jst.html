@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Job Status Chart</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        /* Chart container */
+        #chart_div {
+            width: 300px;
+            height: 170px;
+            margin: auto;
+        }
+
+        /* Popup Styles */
+        .popup {
+            display: none; /* Initially hidden */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60%;
+            max-width: 500px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        /* Overlay background */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        /* Close button */
+        .close-btn {
+            background: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    
+    <h2>Job Status Chart</h2>
+    <div id="chart_div"></div>
+
+    <!-- Overlay Background -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Popup Modal -->
+    <div class="popup" id="popup">
+        <button class="close-btn" onclick="closePopup()">X</button>
+        <h3 id="popupTitle">Filtered Jobs</h3>
+        <table id="jobTable">
+            <thead>
+                <tr>
+                    <th>Job ID</th>
+                    <th>Job Name</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        google.charts.load('current', {packages: ['corechart', 'bar']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        let allJobs = [
+            { id: 1, name: "Task A", status: "Received" },
+            { id: 2, name: "Task B", status: "Delivered" },
+            { id: 3, name: "Task C", status: "Invoiced" },
+            { id: 4, name: "Task D", status: "In Progress" },
+            { id: 5, name: "Task E", status: "Incomplete" },
+            { id: 6, name: "Task F", status: "Problematic" },
+            { id: 7, name: "Task G", status: "Received" },
+            { id: 8, name: "Task H", status: "Delivered" }
+        ];
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Job Status', 'Count', {role: 'style'}], 
+                ['Received', 25, '#1f77b4'],
+                ['Delivered', 18, '#ff7f0e'],
+                ['Invoiced', 12, '#2ca02c'],
+                ['In Progress', 20, '#d62728'],
+                ['Incomplete', 8, '#9467bd'],
+                ['Problematic', 5, '#8c564b']
+            ]);
+
+            var options = {
+                title: 'Job Status',
+                chartArea: { width: '70%' },
+                hAxis: { title: 'Job Status' },
+                vAxis: { title: 'Number of Jobs', minValue: 0 },
+                legend: 'none'
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+
+            google.visualization.events.addListener(chart, 'select', function () {
+                var selectedItem = chart.getSelection()[0];
+                if (selectedItem) {
+                    var status = data.getValue(selectedItem.row, 0);
+                    showPopup(status);
+                }
+            });
+
+            chart.draw(data, options);
+        }
+
+        function showPopup(status) {
+            let tableBody = document.querySelector("#jobTable tbody");
+            tableBody.innerHTML = ""; // Clear previous data
+
+            let filteredJobs = allJobs.filter(job => job.status === status);
+
+            filteredJobs.forEach(job => {
+                let row = `<tr>
+                    <td>${job.id}</td>
+                    <td>${job.name}</td>
+                    <td>${job.status}</td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
+
+            document.getElementById("popupTitle").innerText = `Jobs with status: ${status}`;
+            document.getElementById("popup").style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+        }
+
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        }
+    </script>
+
+</body>
+</html>
