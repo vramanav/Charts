@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filterable Job Table</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        /* Table Styles */
+        .table-container {
+            width: 80%;
+            margin: auto;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #007bff;
+            color: white;
+            position: relative;
+        }
+
+        /* Filter Input */
+        .filter-input {
+            width: 90%;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+
+        tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Job Status Table with Filters</h2>
+
+    <div class="table-container">
+        <table id="jobTable">
+            <thead>
+                <tr>
+                    <th>
+                        Job ID
+                        <br>
+                        <input type="text" class="filter-input" onkeyup="filterTable(0)" placeholder="Search ID">
+                    </th>
+                    <th>
+                        Job Name
+                        <br>
+                        <input type="text" class="filter-input" onkeyup="filterTable(1)" placeholder="Search Name">
+                    </th>
+                    <th>
+                        Status
+                        <br>
+                        <input type="text" class="filter-input" onkeyup="filterTable(2)" placeholder="Search Status">
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Task A</td>
+                    <td>Received</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Task B</td>
+                    <td>Delivered</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Task C</td>
+                    <td>Invoiced</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Task D</td>
+                    <td>In Progress</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Task E</td>
+                    <td>Incomplete</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>Task F</td>
+                    <td>Problematic</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>Task G</td>
+                    <td>Received</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>Task H</td>
+                    <td>Delivered</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function filterTable(columnIndex) {
+            let input, filter, table, tr, td, i, txtValue;
+            input = document.getElementsByClassName("filter-input")[columnIndex];
+            filter = input.value.toUpperCase();
+            table = document.getElementById("jobTable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 1; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[columnIndex];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    tr[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
