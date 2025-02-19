@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtered Job Data Table</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f4f4f4;
+            text-align: center;
+            margin: 20px;
+        }
+
+        .table-container {
+            width: 95%;
+            max-width: 1100px;
+            margin: auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 3px; /* Minimal spacing */
+            font-size: 14px;
+        }
+
+        th {
+            font-weight: bold; /* Makes header text bold */
+            padding: 5px;
+            text-align: center;
+        }
+
+        .filter-input {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* Table styling */
+        tbody tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background: #f1f1f1;
+        }
+
+        td {
+            padding: 8px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* Responsive */
+        @media (max-width: 800px) {
+            th, td {
+                font-size: 12px;
+                padding: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h2 style="color: #333;">📊 Job Data Table</h2>
+
+    <div class="table-container">
+        <table id="jobTable">
+            <thead>
+                <tr>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(0)" placeholder="Job #"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(1)" placeholder="Customer"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(2)" placeholder="Job Name"></th>
+                    <th><input type="text" id="statusFilter" class="filter-input" onkeyup="filterTable(3)" placeholder="Current Status"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(4)" placeholder="Due Date"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(5)" placeholder="Expected Completion"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(6)" placeholder="Estimated Units"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(7)" placeholder="Actual Job Units"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(8)" placeholder="Total Hours Spent"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>101</td><td>ABC Corp</td><td>Site Survey</td><td>In Progress</td><td>2025-02-22</td><td>2025-02-25</td><td>50</td><td>40</td><td>20</td></tr>
+                <tr><td>102</td><td>XYZ Ltd</td><td>Installation</td><td>Completed</td><td>2025-02-18</td><td>2025-02-20</td><td>30</td><td>32</td><td>12</td></tr>
+                <tr><td>103</td><td>LMN Inc</td><td>Maintenance</td><td>Pending</td><td>2025-02-25</td><td>2025-02-28</td><td>20</td><td>15</td><td>10</td></tr>
+                <tr><td>105</td><td>DEF Services</td><td>Quality Check</td><td>Delivered</td><td>2025-02-19</td><td>2025-02-22</td><td>60</td><td>55</td><td>25</td></tr>
+                <tr><td>109</td><td>XYZ Tech</td><td>Server Setup</td><td>Delivered</td><td>2025-02-15</td><td>2025-02-17</td><td>40</td><td>38</td><td>22</td></tr>
+                <tr><td>112</td><td>SkyNet</td><td>Infrastructure Update</td><td>Delivered</td><td>2025-02-12</td><td>2025-02-14</td><td>75</td><td>72</td><td>30</td></tr>
+                <tr><td>115</td><td>OmniCorp</td><td>Network Audit</td><td>Delivered</td><td>2025-02-18</td><td>2025-02-20</td><td>50</td><td>48</td><td>18</td></tr>
+                <tr><td>118</td><td>Global Tech</td><td>Security Upgrade</td><td>Delivered</td><td>2025-02-21</td><td>2025-02-23</td><td>90</td><td>85</td><td>40</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function filterTable(columnIndex) {
+            let input = document.getElementsByClassName("filter-input")[columnIndex];
+            let filter = input.value.toUpperCase();
+            let table = document.getElementById("jobTable");
+            let tr = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < tr.length; i++) {
+                let td = tr[i].getElementsByTagName("td")[columnIndex];
+                if (td) {
+                    let txtValue = td.textContent || td.innerText;
+                    tr[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+                }
+            }
+        }
+
+        // Auto-filter table to only show "Delivered" status on load
+        function autoFilterDelivered() {
+            let statusFilter = document.getElementById("statusFilter");
+            statusFilter.value = "Delivered"; // Set default value in search box
+            filterTable(3); // Apply filter
+        }
+
+        // Run auto-filter after page loads
+        window.onload = autoFilterDelivered;
+    </script>
+
+</body>
+</html>
