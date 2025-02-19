@@ -1,80 +1,69 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-      // Load Google Charts
-      google.charts.load('current', { packages: ['corechart', 'bar'] });
-      google.charts.setOnLoadCallback(drawChart);
+<html lang="en">
 
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Job Status', 'Count', { role: 'style' }], // Define role for colors
-          ['Received', 25, '#1f77b4'],  // Blue
-          ['Delivered', 18, '#ff7f0e'], // Orange
-          ['Invoiced', 12, '#2ca02c'],  // Green
-          ['In Progress', 20, '#d62728'], // Red
-          ['Incomplete', 8, '#9467bd'],  // Purple
-          ['Problematic', 5, '#8c564b']  // Brown
-        ]);
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://www.gstatic.com/charts/loader.js"></script> <!-- External Library (if needed) -->
+  <style>
+    /* Add your CSS styles here */
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+  </style>
+</head>
 
-        var options = {
-          title: 'Job Status',
-          chartArea: { width: '70%' },
-          hAxis: {
-            title: 'Job Status',
-          },
-          vAxis: {
-            title: 'Number of Jobs',
-            minValue: 0,
-            ticks: [0, 5, 10, 15, 20, 25, 30] // Y-axis values
-          },
-          legend: 'none' // Hide legend since color is directly applied
-        };
+<body>
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-        chart.draw(data, options);
-      }
-    </script>
-  </head>
-  <body>
-    <div id="chart_div" style="width: 700px; height: 400px;"></div>
-  </body>
-</html>
-<div id="chart_div" style="width: 700px; height: 400px;"></div>
+  <div id="chart_div" style="width: 300px; height: 170px;"></div>
 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
-  // Load Google Charts
-  google.charts.load('current', {packages: ['corechart', 'bar']});
-  google.charts.setOnLoadCallback(drawChart);
+  <script>
+    // Paste your JavaScript here
+    google.charts.load('current', {
+      packages: ['corechart', 'bar']
+    });
+    google.charts.setOnLoadCallback(drawChart);
 
-  function drawChart() {
-    var data = google.visualization.arrayToDataTable([
-      ['Job Status', 'Count', { role: 'style' }], // Define role for colors
-      ['Received', 25, '#1f77b4'],  // Blue
-      ['Delivered', 18, '#ff7f0e'], // Orange
-      ['Invoiced', 12, '#2ca02c'],  // Green
-      ['In Progress', 20, '#d62728'], // Red
-      ['Incomplete', 8, '#9467bd'],  // Purple
-      ['Problematic', 5, '#8c564b']  // Brown
-    ]);
-
-    var options = {
-      title: 'Job Status',
-      chartArea: { width: '70%' },
-      hAxis: {
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ['Job Status', 'Count', {
+          role: 'style'
+        }],
+        ['Received', 25, '#1f77b4'],
+        ['Delivered', 18, '#ff7f0e'],
+        ['Invoiced', 12, '#2ca02c'],
+        ['In Progress', 20, '#d62728'],
+        ['Incomplete', 8, '#9467bd'],
+        ['Problematic', 5, '#8c564b']
+      ]);
+      var options = {
         title: 'Job Status',
-      },
-      vAxis: {
-        title: 'Number of Jobs',
-        minValue: 0,
-        ticks: [0, 5, 10, 15, 20, 25, 30] // Y-axis values
-      },
-      legend: 'none' // Hide legend since color is directly applied
-    };
+        titleTextStyle: {
+          fontSize: 14,
+          bold: true
+        },
+        chartArea: {
+          width: '70%',
+          height: '60%'
+        },
+        hAxis: {
+          title: '',
+          slantedText: true,
+          slantedTextAngle: 45
+        },
+        vAxis: {
+          title: 'Number of Jobs',
+          minValue: 0,
+          ticks: [0, 5, 10, 15, 20, 25, 30]
+        },
+        legend: 'none'
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+    }
+  </script>
 
-    var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-    chart.draw(data, options);
-  }
-</script>
+</body>
+
+</html>
