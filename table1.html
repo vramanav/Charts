@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Filterable Table</title>
+    <title>Stylish Filterable Table</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            text-align: center;
             background: #f4f4f4;
+            text-align: center;
             margin: 20px;
         }
 
         .table-container {
-            width: 90%;
-            max-width: 800px;
+            width: 95%;
+            max-width: 1100px;
             margin: auto;
             background: white;
-            border-radius: 10px;
+            border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
@@ -28,46 +28,42 @@
             font-size: 14px;
         }
 
+        /* Navy blue header with filters inside */
         thead {
-            background: #0054a6;
-            color: white;
-        }
-
-        th, td {
-            padding: 8px 12px;
-            text-align: left;
+            background: #002147;
         }
 
         th {
-            font-weight: bold;
-            position: relative;
+            padding: 5px;
         }
 
-        /* Slim header & filter input */
         .filter-input {
-            width: 90%;
-            padding: 5px;
-            border: 1px solid #ccc;
+            width: 100%;
+            padding: 8px;
+            border: none;
             border-radius: 4px;
             font-size: 12px;
-            margin-top: 3px;
+            background: #f8f9fa;
+            text-align: center;
         }
 
-        /* Zebra striping */
+        /* Table styling */
         tbody tr:nth-child(even) {
             background: #f9f9f9;
         }
 
-        /* Row hover effect */
         tbody tr:hover {
             background: #f1f1f1;
         }
 
-        /* Responsive table */
-        @media (max-width: 600px) {
-            .table-container {
-                width: 100%;
-            }
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 800px) {
             th, td {
                 font-size: 12px;
                 padding: 6px;
@@ -77,35 +73,32 @@
 </head>
 <body>
 
-    <h2 style="color: #333;">📊 Job Status Table</h2>
+    <h2 style="color: #333;">📊 Job Data Table</h2>
 
     <div class="table-container">
         <table id="jobTable">
             <thead>
                 <tr>
-                    <th>
-                        Job ID <br>
-                        <input type="text" class="filter-input" onkeyup="filterTable(0)" placeholder="Search ID">
-                    </th>
-                    <th>
-                        Job Name <br>
-                        <input type="text" class="filter-input" onkeyup="filterTable(1)" placeholder="Search Name">
-                    </th>
-                    <th>
-                        Status <br>
-                        <input type="text" class="filter-input" onkeyup="filterTable(2)" placeholder="Search Status">
-                    </th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(0)" placeholder="Job #"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(1)" placeholder="Customer"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(2)" placeholder="Job Name"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(3)" placeholder="Current Status"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(4)" placeholder="Due Date"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(5)" placeholder="Expected Completion"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(6)" placeholder="Estimated Units"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(7)" placeholder="Actual Job Units"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(8)" placeholder="Total Hours Spent"></th>
                 </tr>
             </thead>
             <tbody>
-                <tr><td>1</td><td>Task A</td><td>Received</td></tr>
-                <tr><td>2</td><td>Task B</td><td>Delivered</td></tr>
-                <tr><td>3</td><td>Task C</td><td>Invoiced</td></tr>
-                <tr><td>4</td><td>Task D</td><td>In Progress</td></tr>
-                <tr><td>5</td><td>Task E</td><td>Incomplete</td></tr>
-                <tr><td>6</td><td>Task F</td><td>Problematic</td></tr>
-                <tr><td>7</td><td>Task G</td><td>Received</td></tr>
-                <tr><td>8</td><td>Task H</td><td>Delivered</td></tr>
+                <tr><td>101</td><td>ABC Corp</td><td>Site Survey</td><td>In Progress</td><td>2025-02-22</td><td>2025-02-25</td><td>50</td><td>40</td><td>20</td></tr>
+                <tr><td>102</td><td>XYZ Ltd</td><td>Installation</td><td>Completed</td><td>2025-02-18</td><td>2025-02-20</td><td>30</td><td>32</td><td>12</td></tr>
+                <tr><td>103</td><td>LMN Inc</td><td>Maintenance</td><td>Pending</td><td>2025-02-25</td><td>2025-02-28</td><td>20</td><td>15</td><td>10</td></tr>
+                <tr><td>104</td><td>PQR Solutions</td><td>Testing</td><td>In Progress</td><td>2025-02-21</td><td>2025-02-24</td><td>40</td><td>35</td><td>18</td></tr>
+                <tr><td>105</td><td>DEF Services</td><td>Quality Check</td><td>Delivered</td><td>2025-02-19</td><td>2025-02-22</td><td>60</td><td>55</td><td>25</td></tr>
+                <tr><td>106</td><td>GHI Global</td><td>Survey</td><td>Incomplete</td><td>2025-02-26</td><td>2025-02-29</td><td>45</td><td>40</td><td>22</td></tr>
+                <tr><td>107</td><td>JKL Enterprises</td><td>Audit</td><td>Invoiced</td><td>2025-02-20</td><td>2025-02-23</td><td>35</td><td>30</td><td>15</td></tr>
+                <tr><td>108</td><td>MNO Networks</td><td>Repair</td><td>Received</td><td>2025-02-22</td><td>2025-02-25</td><td>55</td><td>50</td><td>20</td></tr>
             </tbody>
         </table>
     </div>
