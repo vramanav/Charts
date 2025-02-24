@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apache ECharts Drilldown</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <style>
+        /* Breadcrumb Styles (Separate from Chart) */
+        #breadcrumb {
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            text-align: left;
+            background: #f8f9fa; /* Light gray background */
+            padding: 10px;
+            border-bottom: 1px solid #ddd; /* Separator */
+            margin-bottom: 0px;
+            width: 380px; /* Matches chart width */
+        }
+
+        /* Chart Container */
+        .chart-container {
+            width: 400px;
+            height: 280px;
+         }
+
+        /* Clickable Breadcrumb Link */
+        .breadcrumb-link {
+            color: #1A73E8;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Breadcrumb (Separate from Chart) -->
+    <div id="breadcrumb"></div>
+
+    <!-- Chart -->
+    <div id="main" class="chart-container"></div>
+
+    <script>
+        var chart = echarts.init(document.getElementById('main'));
+        var breadcrumb = document.getElementById('breadcrumb');
+
+        // Draw Main Chart
+        function drawMainChart() {
+            breadcrumb.innerHTML = '<span class="breadcrumb-link" onclick="drawMainChart()">Job Status</span>';
+
+            var option = {
+                grid: { top: 30, bottom: 60, left: 50, right: 20 },
+                xAxis: {
+                    type: 'category',
+                    data: ['Received', 'Delivered', 'Invoiced', 'Not Delivered'],
+                    axisLabel: {
+                        interval: 0, 
+                        rich: {
+                            clickable: {
+                                color: '#1A73E8',
+                                textDecoration: 'underline',
+                                cursor: 'pointer'
+                            }
+                        },
+                        formatter: function (value) {
+                            if (value === 'Not Delivered') {
+                                return '{clickable|' + value + '}';
+                            }
+                            return value;
+                        }
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    splitLine: { show: false },
+                    axisLabel: { margin: 10 }
+                },
+                series: [{
+                    type: 'bar',
+                    data: [40, 60, 35, 50],
+                    itemStyle: {
+                        color: function (params) {
+                            return ['#4285F4', '#34A853', '#FBBC05', '#EA4335'][params.dataIndex];
+                        }
+                    },
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: '{c}'
+                    }
+                }],
+                tooltip: { trigger: 'axis' }
+            };
+
+            chart.setOption(option);
+
+            // Enable click event for "Not Delivered" to drill down
+            chart.getZr().on('click', function (event) {
+                var pointInPixel = [event.offsetX, event.offsetY];
+                var pointInGrid = chart.convertFromPixel({ seriesIndex: 0 }, pointInPixel);
+
+                if (pointInGrid) {
+                    var xIndex = pointInGrid[0];
+                    var categories = ['Received', 'Delivered', 'Invoiced', 'Not Delivered'];
+
+                    if (categories[xIndex] === 'Not Delivered') {
+                        drawDrilldownChart();
+                    }
+                }
+            });
+        }
+
+        // Draw Drilldown Chart
+        function drawDrilldownChart() {
+            breadcrumb.innerHTML = '<span class="breadcrumb-link" onclick="drawMainChart()">Job Status</span> / Not Delivered';
+
+            var option = {
+                grid: { top: 30, bottom: 60, left: 50, right: 20 },
+                xAxis: {
+                    type: 'category',
+                    data: ['In Progress', 'Incomplete', 'Problematic', 'Cancelled'],
+                    axisLabel: { interval: 0 }
+                },
+                yAxis: {
+                    type: 'value',
+                    splitLine: { show: false },
+                    axisLabel: { margin: 10 }
+                },
+                series: [{
+                    type: 'bar',
+                    data: [20, 15, 10, 5],
+                    itemStyle: {
+                        color: function (params) {
+                            return ['#F4B400', '#DB4437', '#F09300', '#888888'][params.dataIndex];
+                        }
+                    },
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: '{c}'
+                    }
+                }],
+                tooltip: { trigger: 'axis' }
+            };
+
+            chart.setOption(option);
+        }
+
+        // Initialize with Main Chart
+        drawMainChart();
+    </script>
+
+</body>
+</html>
