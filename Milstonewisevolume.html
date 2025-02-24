@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expandable Milestone Table</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #3F51B5; /* Dark Blue Header */
+            color: white;
+        }
+
+        /* Milestone Row */
+        .milestone {
+            background: #C5CAE9; /* Light Blue */
+            font-weight: bold;
+            cursor: pointer;
+            text-align: left;
+            position: relative;
+        }
+
+        /* Market Row */
+        .market {
+            background: #ebe9fe; /* Light Purple */
+            display: none; /* Hide markets initially */
+        }
+
+        /* Align milestone text and keep icon at fixed position */
+        .milestone td {
+            text-align: left;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .expand-icon {
+            position: absolute;
+            left: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .milestone:hover {
+            background: #B0BEC5; /* Slightly darker on hover */
+        }
+    </style>
+    <script>
+        function toggleRows(milestone) {
+            var rows = document.getElementsByClassName(milestone);
+            var icon = document.getElementById("icon-" + milestone);
+
+            for (var i = 0; i < rows.length; i++) {
+                rows[i].style.display = (rows[i].style.display === "table-row") ? "none" : "table-row";
+            }
+
+            // Toggle icons
+            icon.innerHTML = (icon.innerHTML === "+") ? "−" : "+";
+        }
+    </script>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Milestone</th>
+                <th>Market</th>
+                <th>Planned</th>
+                <th>Received</th>
+                <th>In Hand</th>
+                <th>Del to CDC</th>
+                <th>Del to Client</th>
+                <th>Invoiced</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- F2-Aramis -->
+            <tr class="milestone" onclick="toggleRows('f2-aramis')">
+                <td>
+                    <span id="icon-f2-aramis" class="expand-icon">+</span> F2-Aramis
+                </td>
+                <td>All</td>
+                <td>220000</td><td>180000</td><td>410000</td><td>370000</td><td>395000</td><td>2690000</td>
+            </tr>
+            <tr class="market f2-aramis">
+                <td></td><td>TN</td><td>90000</td><td>65000</td><td>150000</td><td>130000</td><td>140000</td><td>1300000</td>
+            </tr>
+            <tr class="market f2-aramis">
+                <td></td><td>KY</td><td>50000</td><td>55000</td><td>120000</td><td>120000</td><td>120000</td><td>100000</td>
+            </tr>
+            <tr class="market f2-aramis">
+                <td></td><td>GA</td><td>80000</td><td>60000</td><td>140000</td><td>120000</td><td>135000</td><td>1290000</td>
+            </tr>
+
+            <!-- F2-IQGEO -->
+            <tr class="milestone" onclick="toggleRows('f2-iqgeo')">
+                <td>
+                    <span id="icon-f2-iqgeo" class="expand-icon">+</span> F2-IQGEO
+                </td>
+                <td>All</td>
+                <td>210000</td><td>175000</td><td>400000</td><td>360000</td><td>385000</td><td>2650000</td>
+            </tr>
+            <tr class="market f2-iqgeo">
+                <td></td><td>TN</td><td>85000</td><td>70000</td><td>145000</td><td>125000</td><td>135000</td><td>1280000</td>
+            </tr>
+            <tr class="market f2-iqgeo">
+                <td></td><td>KY</td><td>45000</td><td>55000</td><td>120000</td><td>115000</td><td>115000</td><td>95000</td>
+            </tr>
+            <tr class="market f2-iqgeo">
+                <td></td><td>GA</td><td>80000</td><td>60000</td><td>135000</td><td>120000</td><td>135000</td><td>1280000</td>
+            </tr>
+
+            <!-- F1 -->
+            <tr class="milestone" onclick="toggleRows('f1')">
+                <td>
+                    <span id="icon-f1" class="expand-icon">+</span> F1
+                </td>
+                <td>All</td>
+                <td>205000</td><td>165000</td><td>395000</td><td>355000</td><td>380000</td><td>2600000</td>
+            </tr>
+            <tr class="market f1">
+                <td></td><td>TN</td><td>78000</td><td>60000</td><td>140000</td><td>120000</td><td>130000</td><td>1250000</td>
+            </tr>
+            <tr class="market f1">
+                <td></td><td>KY</td><td>45000</td><td>50000</td><td>110000</td><td>115000</td><td>115000</td><td>90000</td>
+            </tr>
+            <tr class="market f1">
+                <td></td><td>GA</td><td>82000</td><td>55000</td><td>145000</td><td>120000</td><td>135000</td><td>1260000</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
