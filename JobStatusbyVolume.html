@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+    }
+
+    /* Breadcrumb Styles */
+    #breadcrumb {
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+      text-align: left;
+      background: #f8f9fa; /* Light gray background */
+      padding: 10px;
+      margin-bottom: 5px;
+      width: 580px; /* Matches chart width */
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    /* Chart Container */
+    #chart_container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    /* Updated Chart Box */
+    #chart_div {
+      width: 600px;
+      height: 300px;
+      background: #fff;
+      border: 1px solid #999999;
+      border-radius: 2px;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="chart_container">
+    <div id="breadcrumb">Job Status by Volume</div> <!-- Breadcrumb added -->
+    <div id="chart_div"></div>
+  </div>
+
+  <script>
+    google.charts.load('current', { packages: ['corechart', 'bar'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ['Job Status', 'Volume', { role: 'style' }], // Added color role
+        ['Planned', 120, '#4CAF50'],     // Green
+        ['Received', 180, '#FF9800'],    // Orange
+        ['In Hand', 140, '#2196F3'],     // Blue
+        ['Del to CDC', 90, '#9C27B0'],   // Purple
+        ['Del to Client', 75, '#F44336'], // Red
+        ['Invoiced', 60, '#795548']      // Brown
+      ]);
+
+      var options = {
+        width: 600,
+        height: 300,
+        chartArea: { width: '80%', height: '70%' },
+        legend: { position: 'none' }, // No legend needed
+        hAxis: { 
+          textStyle: { fontSize: 10 }, 
+          title: 'Values in Thousands', // X-axis label added
+          titleTextStyle: { fontSize: 12, italic: false, bold: true }
+        },
+        vAxis: { 
+          textStyle: { fontSize: 10 }, 
+          title: '', 
+          gridlines: { color: '#ddd' }, 
+          viewWindow: { min: 0, max: 200 } 
+        },
+        animation: {
+          startup: true,
+          duration: 1000,
+          easing: 'out'
+        },
+        bars: 'vertical' // Vertical bars
+      };
+
+      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+    }
+  </script>
+
+</body>
+
+</html>
