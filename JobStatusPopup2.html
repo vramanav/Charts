@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtered Job Data Table</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f4f4;
+            text-align: center;
+            margin: 20px;
+        }
+
+        .table-container {
+            width: 95%;
+            max-width: 1100px;
+            margin: auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        /* New Table Header Color */
+        thead {
+            background: #3F51B5; /* Muted Blue */
+            color: #fff;
+        }
+
+        th {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            text-align: center;
+            position: relative;
+        }
+
+        .filter-input {
+            width: 90%;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 10px;
+            text-align: center;
+            display: block;
+            margin: auto;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Status-based row colors */
+        .status-received { background: #FAFAFA; color: #e22007}      /* Light Green */
+        .status-delivered { background: #EAF7EA; color:#fb14aa}    /* Soft Blue */
+        .status-invoiced { background: #EAF7EA; color:#267b0c}     /* Soft Yellow */
+        .status-inprogress { background: #fffdcd; color:#146a00}   /* Noticeable Orange */
+        .status-incomplete { background: #fffdcd; color:#c42115}   /* Bright Red */
+        .status-problematic { background: #fdd6d7; color: #e91f8b; }  /* Dark Red with white text */
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        td:nth-child(3) {
+            text-align: left; /* Align job name left */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px; /* Adjust width as needed */
+        }
+
+        @media (max-width: 800px) {
+            th, td {
+                font-size: 12px;
+                padding: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="table-container">
+        <table id="jobTable">
+            <thead>
+                <tr>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(0)" placeholder="Job #"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(1)" placeholder="Customer"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(2)" placeholder="Job Name"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(3)" placeholder="Current Status"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(4)" placeholder="Due Date"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(5)" placeholder="Expected Completion"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(6)" placeholder="Estimated Units"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(7)" placeholder="Actual Job Units"></th>
+                    <th><input type="text" class="filter-input" onkeyup="filterTable(8)" placeholder="Total Hours Spent"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="status-inprogress"><td>87540</td><td>Lumen</td><td>FL_PTCTFL_Rte1B_RESUB_P.083221_P-366665...</td><td>In-progress</td><td>24-02-2025</td><td>25-02-2025</td><td>24,635</td><td>24,635</td><td>65</td></tr>
+                <tr class="status-problematic"><td>87641</td><td>Lumen</td><td>FL_PTCTFL_Rte2_RESUB_P.085179_P-371256...</td><td>Problematic</td><td>24-02-2025</td><td>25-02-2025</td><td>13,000</td><td>13,000</td><td>32</td></tr>
+                <tr class="status-delivered"><td>87638</td><td>Lumen</td><td>FL_PTCTFL_Rte2_RESUB_P.085196_P-371255...</td><td>Delivered</td><td>24-02-2025</td><td>25-02-2025</td><td>6,500</td><td>6,500</td><td>65</td></tr>
+                <tr class="status-onhold"><td>87547</td><td>Lumen</td><td>FL_PTCTFL_Rte3_RESUB_P.085198_P-371248...</td><td>On Hold</td><td>24-02-2025</td><td>25-02-2025</td><td>7,670</td><td>7,670</td><td>95</td></tr>
+                <tr class="status-cancelled"><td>84060</td><td>Lumen</td><td>WA_BLHMWA01_126181-P.059692_P-365006...</td><td>Cancelled</td><td>24-02-2025</td><td>25-02-2025</td><td>11,851</td><td>11,851</td><td>112</td></tr>
+                <tr class="status-invoiced"><td>84069</td><td>Lumen</td><td>WA_BLHMWA01_540281-P.059700_P-365016...</td><td>Invoiced</td><td>24-02-2025</td><td>25-02-2025</td><td>8,512</td><td>8,512</td><td>121</td></tr>
+                <tr class="status-invoiced"><td>127748</td><td>Lumen</td><td>WA_SPKNWAFA_RTE4_P.147566...</td><td>Invoiced</td><td>24-02-2025</td><td>25-02-2025</td><td>32,588</td><td>32,588</td><td>36</td></tr>
+                <tr class="status-incomplete"><td>127749</td><td>Lumen</td><td>WA_SPKNWAFA_RTE4_P.147567...</td><td>Incomplete</td><td>24-02-2025</td><td>25-02-2025</td><td>9,015</td><td>9,015</td><td>140</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function filterTable(columnIndex) {
+            let input = document.getElementsByClassName("filter-input")[columnIndex];
+            let filter = input.value.toUpperCase();
+            let table = document.getElementById("jobTable");
+            let tr = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < tr.length; i++) {
+                let td = tr[i].getElementsByTagName("td")[columnIndex];
+                if (td) {
+                    let txtValue = td.textContent || td.innerText;
+                    tr[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
