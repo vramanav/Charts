@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+    .table-container {
+      width: 100%;
+      background: #fff;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .table-header {
+      display: flex;
+      background: #d8f5fb;
+      color: white;
+      padding: 0px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      border-bottom: 1px solid #f2f2f2;
+      padding: 0px 0;
+    }
+    .row:hover {
+      background: #ececff;
+    }
+    .cell {
+      flex: 1;
+      padding: 10px 10px;
+      font-size: 15px;
+      color: #666;
+      text-align: left;
+    }
+    .expand-icon {
+      cursor: pointer;
+      font-weight: bold;
+      margin-right: 10px;
+      font-size: 18px;
+      color: #333;
+    }
+    .hidden {
+      display: none;
+    }
+    .toggle-container {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="toggle-container">
+    <label>
+      <input type="radio" name="view-toggle" value="milestone" checked> Milestone
+    </label>
+    <label>
+      <input type="radio" name="view-toggle" value="Market"> Market
+    </label>
+  </div>
+
+  <div class="table-container">
+    <div class="table-header">
+      <div class="cell first-col">Milestone</div>
+      <div class="cell second-col">Market</div>
+      <div class="cell">Planned</div>
+      <div class="cell">Received</div>
+      <div class="cell">In Hand</div>
+      <div class="cell">Del to CDC</div>
+      <div class="cell">Del to Client</div>
+      <div class="cell">Invoiced</div>
+    </div>
+    <div class="table-body">
+      <!-- Rows will be inserted dynamically based on view -->
+    </div>
+  </div>
+
+  <script>
+    const data = [
+      { milestone: "F2-Aramis", Market: "TN", planned: 75000, received: 50000, inHand: 120000, delCDC: 40000, delClient: 30000, invoiced: 60000 },
+      { milestone: "F2-Aramis", Market: "KY", planned: 35000, received: 55000, inHand: 100000, delCDC: 20000, delClient: 25000, invoiced: 50000 },
+      { milestone: "F2-Aramis", Market: "GA", planned: 80000, received: 55000, inHand: 150000, delCDC: 50000, delClient: 35000, invoiced: 70000 },
+      { milestone: "F2-IQGEO", Market: "TN", planned: 82000, received: 62000, inHand: 130000, delCDC: 45000, delClient: 32000, invoiced: 65000 },
+      { milestone: "F2-IQGEO", Market: "KY", planned: 43000, received: 48000, inHand: 105000, delCDC: 22000, delClient: 27000, invoiced: 52000 },
+      { milestone: "F2-IQGEO", Market: "GA", planned: 85000, received: 65000, inHand: 155000, delCDC: 55000, delClient: 37000, invoiced: 75000 }
+    ];
+
+    function renderTable(groupBy) {
+      let groupedData = {};
+      data.forEach(entry => {
+        let key = entry[groupBy];
+        if (!groupedData[key]) {
+          groupedData[key] = { total: { planned: 0, received: 0, inHand: 0, delCDC: 0, delClient: 0, invoiced: 0 }, items: [] };
+        }
+        Object.keys(groupedData[key].total).forEach(col => {
+          groupedData[key].total[col] += entry[col];
+        });
+        groupedData[key].items.push(entry);
+      });
+      
+      let tableBody = $(".table-body");
+      tableBody.empty();
+      
+      Object.keys(groupedData).forEach(key => {
+        let total = groupedData[key].total;
+        let groupRow = `<div class='row group-row'><div class='cell'><span class='expand-icon'>+</span>${key}</div>
+                        <div class='cell'>All</div>
+                        <div class='cell'>${total.planned}</div>
+                        <div class='cell'>${total.received}</div>
+                        <div class='cell'>${total.inHand}</div>
+                        <div class='cell'>${total.delCDC}</div>
+                        <div class='cell'>${total.delClient}</div>
+                        <div class='cell'>${total.invoiced}</div></div>`;
+        tableBody.append(groupRow);
+        
+        groupedData[key].items.forEach(entry => {
+          let detailRow = `<div class='row detail-row hidden'><div class='cell'></div>
+                           <div class='cell'>${groupBy === "milestone" ? entry.Market : entry.milestone}</div>
+                           <div class='cell'>${entry.planned}</div>
+                           <div class='cell'>${entry.received}</div>
+                           <div class='cell'>${entry.inHand}</div>
+                           <div class='cell'>${entry.delCDC}</div>
+                           <div class='cell'>${entry.delClient}</div>
+                           <div class='cell'>${entry.invoiced}</div></div>`;
+          tableBody.append(detailRow);
+        });
+      });
+    }
+
+    $(document).ready(function () {
+      renderTable("milestone");
+      $("input[name='view-toggle']").change(function () {
+        let selected = $("input[name='view-toggle']:checked").val();
+        $(".first-col").text(selected.charAt(0).toUpperCase() + selected.slice(1));
+        $(".second-col").text(selected === "milestone" ? "Market" : "Milestone");
+        renderTable(selected);
+      });
+      $(document).on("click", ".expand-icon", function () {
+        $(this).text($(this).text() === "+" ? "-" : "+");
+        $(this).closest(".row").nextUntil(".group-row").toggleClass("hidden");
+      });
+    });
+  </script>
+</body>
+</html>
