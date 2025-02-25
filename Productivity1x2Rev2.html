@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .table-container {
+      width: 100%;
+      max-width: auto;
+      background: #fff;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 0px;
+    }
+
+    .table-header {
+      display: flex;
+      background: #d8f5fb;
+      color: #000;
+      padding: 10px 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      border-bottom: 1px solid #f2f2f2;
+      padding: 0px 0;
+    }
+
+    .row:hover {
+      background: #ececff;
+    }
+
+    .cell {
+      flex: 1;
+      padding: 10px 10px;
+      font-size: 15px;
+      color: #666;
+      text-align: left;
+    }
+
+    .milestone-row {
+      font-weight: bold;
+      background: #ffffff;
+    }
+
+    .expand-icon {
+      cursor: pointer;
+      font-weight: bold;
+      margin-right: 10px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <label>
+    <input type="radio" name="viewToggle" value="milestone" checked> Milestone View
+  </label>
+  <label>
+    <input type="radio" name="viewToggle" value="market"> Market View
+  </label>
+
+  <div class="table-container">
+    <div class="table-header">
+      <div class="cell" id="col1">Milestone</div>
+      <div class="cell" id="col2">Market</div>
+      <div class="cell">Total Effort</div>
+      <div class="cell">Production</div>
+      <div class="cell">Quality</div>
+      <div class="cell">Support Group</div>
+    </div>
+    <div id="table-body"></div>
+  </div>
+
+  <script>
+    const data = [
+      { milestone: "F2-Aramis", market: "TN", totalEffort: 364, production: 309, quality: 36, supportGroup: 18 },
+      { milestone: "F2-Aramis", market: "KY", totalEffort: 273, production: 232, quality: 27, supportGroup: 14 },
+      { milestone: "F2-Aramis", market: "GA", totalEffort: 182, production: 155, quality: 18, supportGroup: 9 },
+      { milestone: "F2-IQGEO", market: "TN", totalEffort: 455, production: 387, quality: 46, supportGroup: 23 },
+      { milestone: "F2-IQGEO", market: "KY", totalEffort: 273, production: 232, quality: 27, supportGroup: 14 },
+      { milestone: "F2-IQGEO", market: "GA", totalEffort: 182, production: 155, quality: 18, supportGroup: 9 },
+      { milestone: "F1", market: "TN", totalEffort: 546, production: 464, quality: 55, supportGroup: 27 },
+      { milestone: "F1", market: "KY", totalEffort: 273, production: 232, quality: 27, supportGroup: 14 },
+      { milestone: "F1", market: "GA", totalEffort: 364, production: 309, quality: 36, supportGroup: 18 }
+    ];
+
+    function renderTable(viewBy) {
+      let tableHTML = "";
+      let groupedData = {};
+
+      data.forEach(row => {
+        let key = viewBy === "milestone" ? row.milestone : row.market;
+        if (!groupedData[key]) {
+          groupedData[key] = { totalEffort: 0, production: 0, quality: 0, supportGroup: 0, children: [] };
+        }
+        groupedData[key].totalEffort += row.totalEffort;
+        groupedData[key].production += row.production;
+        groupedData[key].quality += row.quality;
+        groupedData[key].supportGroup += row.supportGroup;
+        groupedData[key].children.push(row);
+      });
+
+      for (let key in groupedData) {
+        let row = groupedData[key];
+
+        // ✅ Correctly setting first and second columns based on view
+        let firstColValue = viewBy === "milestone" ? key : key;  // Market name when in Market View
+        let secondColValue = "All"; // Always "All" in second column
+
+        tableHTML += `<div class='row milestone-row'>
+                        <div class='cell'><span class='expand-icon'>+</span> ${firstColValue}</div>
+                        <div class='cell'>${secondColValue}</div>
+                        <div class='cell'>${row.totalEffort}</div>
+                        <div class='cell'>${row.production}</div>
+                        <div class='cell'>${row.quality}</div>
+                        <div class='cell'>${row.supportGroup}</div>
+                      </div>`;
+
+        row.children.forEach(child => {
+          tableHTML += `<div class='row market-row hidden'>
+                          <div class='cell'></div>
+                          <div class='cell'>${viewBy === "milestone" ? child.market : child.milestone}</div>
+                          <div class='cell'>${child.totalEffort}</div>
+                          <div class='cell'>${child.production}</div>
+                          <div class='cell'>${child.quality}</div>
+                          <div class='cell'>${child.supportGroup}</div>
+                        </div>`;
+        });
+      }
+      $("#table-body").html(tableHTML);
+    }
+
+    $(document).on("change", "input[name='viewToggle']", function () {
+      let selectedView = $(this).val();
+      $("#col1").text(selectedView === "milestone" ? "Milestone" : "Market");
+      $("#col2").text("All"); // Always "All" in column 2
+      renderTable(selectedView);
+    });
+
+    $(document).on("click", ".expand-icon", function () {
+      $(this).closest(".row").nextUntil(".milestone-row").toggleClass("hidden");
+      $(this).text($(this).text() === "+" ? "-" : "+");
+    });
+
+    renderTable("milestone");
+  </script>
+</body>
+
+</html>
