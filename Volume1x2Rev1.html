@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .table-container {
+      width: 100%;
+      max-width: auto;
+      background: #fff;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .table-header {
+      display: flex;
+      background: #d8f5fb;
+      color: white;
+      padding: 10px 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      border-bottom: 1px solid #f2f2f2;
+      padding: 10px 0;
+    }
+
+    .row:hover {
+      background: #ececff;
+    }
+
+    .cell {
+      flex: 1;
+      padding: 15px 20px;
+      font-size: 15px;
+      color: #666;
+      text-align: left;
+    }
+
+    .milestone-row {
+      font-weight: bold;
+      background: #ffffff;
+    }
+
+    .expand-icon {
+      cursor: pointer;
+      font-weight: bold;
+      margin-right: 10px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <label>
+    <input type="radio" name="viewToggle" value="milestone" checked> Milestone View
+  </label>
+  <label>
+    <input type="radio" name="viewToggle" value="market"> Market View
+  </label>
+
+  <div class="table-container">
+    <div class="table-header">
+      <div class="cell" id="col1">Milestone</div>
+      <div class="cell" id="col2">Market</div>
+      <div class="cell">Problematic</div>
+      <div class="cell">In Progress</div>
+      <div class="cell">Not Started</div>
+    </div>
+    <div id="table-body"></div>
+  </div>
+
+  <script>
+    const data = [
+      { milestone: "F2-Aramis", market: "TN", problematic: 75000, inProgress: 50000, notStarted: 120000 },
+      { milestone: "F2-Aramis", market: "KY", problematic: 35000, inProgress: 55000, notStarted: 100000 },
+      { milestone: "F2-Aramis", market: "GA", problematic: 80000, inProgress: 55000, notStarted: 150000 },
+      { milestone: "F2-IQGEO", market: "TN", problematic: 82000, inProgress: 62000, notStarted: 130000 },
+      { milestone: "F2-IQGEO", market: "KY", problematic: 43000, inProgress: 48000, notStarted: 105000 },
+      { milestone: "F2-IQGEO", market: "GA", problematic: 85000, inProgress: 65000, notStarted: 155000 },
+    ];
+
+    function renderTable(viewBy) {
+      let tableHTML = "";
+      let groupedData = {};
+      data.forEach(row => {
+        let key = viewBy === "milestone" ? row.milestone : row.market;
+        if (!groupedData[key]) {
+          groupedData[key] = { problematic: 0, inProgress: 0, notStarted: 0, children: [] };
+        }
+        groupedData[key].problematic += row.problematic;
+        groupedData[key].inProgress += row.inProgress;
+        groupedData[key].notStarted += row.notStarted;
+        groupedData[key].children.push(row);
+      });
+      
+      for (let key in groupedData) {
+        let row = groupedData[key];
+        tableHTML += `<div class='row milestone-row'>
+                        <div class='cell'><span class='expand-icon'>+</span> ${key}</div>
+                        <div class='cell'>All</div>
+                        <div class='cell'>${row.problematic}</div>
+                        <div class='cell'>${row.inProgress}</div>
+                        <div class='cell'>${row.notStarted}</div>
+                      </div>`;
+        
+        row.children.forEach(child => {
+          tableHTML += `<div class='row market-row hidden'>
+                          <div class='cell'></div>
+                          <div class='cell'>${viewBy === "milestone" ? child.market : child.milestone}</div>
+                          <div class='cell'>${child.problematic}</div>
+                          <div class='cell'>${child.inProgress}</div>
+                          <div class='cell'>${child.notStarted}</div>
+                        </div>`;
+        });
+      }
+      $("#table-body").html(tableHTML);
+    }
+
+    $(document).on("change", "input[name='viewToggle']", function () {
+      let selectedView = $(this).val();
+      $("#col1").text(selectedView === "milestone" ? "Milestone" : "Market");
+      $("#col2").text(selectedView === "milestone" ? "Market" : "Milestone");
+      renderTable(selectedView);
+    });
+
+    $(document).on("click", ".expand-icon", function () {
+      $(this).closest(".row").nextUntil(".milestone-row").toggleClass("hidden");
+      $(this).text($(this).text() === "+" ? "-" : "+");
+    });
+
+    renderTable("milestone");
+  </script>
+</body>
+
+</html>
