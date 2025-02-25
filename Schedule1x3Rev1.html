@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    /* Breadcrumb Styles */
+    #breadcrumb {
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+      text-align: left;
+      background: #f8f9fa; /* Light gray background */
+      padding: 10px;
+      border-bottom: 0px solid #ddd; /* Separator */
+      margin-bottom: 5px;
+      width: 380px; /* Matches chart width */
+    }
+
+    /* Chart Container */
+    #chart_container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Chart Box - Matches Other Chart Styles */
+    #chart_div {
+      width: 400px;
+      height: 280px;
+      background: #ffffff;
+      border: 1px solid #999999;
+      border-radius: 2px;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Breadcrumb -->
+  <div id="breadcrumb">Overdue Jobs</div>
+
+  <div id="chart_container">
+    <div id="chart_div"></div>
+  </div>
+
+  <script>
+    google.charts.load('current', { packages: ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ['Delayed Jobs', 'Count'],
+        ['1-7 Days', 25],
+        ['8-15 Days', 18],
+        ['15-30 Days', 12],
+        ['>30 Days', 20]
+      ]);
+
+      var options = {
+        pieHole: 0.3, // Semi-donut style
+        chartArea: { top: 10, width: '100%', height: '75%' }, // More space for legend
+        colors: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'],
+        legend: { position: 'bottom', textStyle: { fontSize: 10 } }, // Moved to bottom for better visibility
+        animation: {
+          startup: true,
+          duration: 1000,
+          easing: 'out'
+        }
+      };
+
+      var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+    }
+  </script>
+
+</body>
+
+</html>
