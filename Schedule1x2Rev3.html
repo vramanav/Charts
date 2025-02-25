@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    /* Breadcrumb */
+    #breadcrumb {
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            text-align: left;
+            background: #f8f9fa; /* Light gray background */
+            padding: 10px;
+            border-bottom: 0px solid #ddd; /* Separator */
+            margin-bottom: 5px;
+            width: 380px; /* Matches chart width */
+        }
+
+    /* Hyperlink Styling */
+    .breadcrumb-link {
+      color: #0078D7;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* Card Section */
+    .card {
+      width: 400px;
+      height: 280px;
+      background: #ffffff;
+      border: 1px solid #999999;
+      border-radius: 2px;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0px 0;
+      margin-bottom: 10px;
+    }
+
+    /* Chart Section */
+    .chart-container {
+      width: 400px;
+      height: 280px;
+      background: #ffffff;
+      border: 1px solid #999999;
+      border-radius: 4px;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+      display: none;
+      padding-top: 0px;
+      position: relative;
+    }
+
+    /* Card Title */
+    .card-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    /* Box Styles */
+    .data-box {
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .box {
+      width: 160px;
+      height: 50px;
+      background: #0078D7;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+    }
+
+    .box.secondary {
+      background: #FF9800;
+    }
+
+    /* Labels */
+    .label {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Breadcrumb Navigation -->
+  <div id="breadcrumb">
+    <span class="breadcrumb-link" onclick="toggleDrilldown(true)">Schedule Adherence</span>
+    <span id="drilldownBreadcrumb" style="display: none;"> > Delivered Jobs</span>
+  </div>
+
+  <!-- Card Section -->
+  <div class="card" id="cardSection">
+        <div class="data-box">
+      <div class="box" onclick="toggleDrilldown()">20</div>
+      <div class="label">Delivered Jobs</div>
+
+      <div class="box secondary">80%</div>
+      <div class="label">On-Time %</div>
+    </div>
+  </div>
+
+  <!-- Chart Section -->
+  <div id="main" class="chart-container"></div>
+
+  <script>
+    var chart = echarts.init(document.getElementById('main'));
+    var breadcrumb = document.getElementById('breadcrumb');
+    var drilldownBreadcrumb = document.getElementById('drilldownBreadcrumb');
+    var cardSection = document.getElementById('cardSection');
+    var chartContainer = document.getElementById('main');
+    var isDrilldown = false;
+
+    // Function to Toggle Drilldown Chart
+    function toggleDrilldown(isReset = false) {
+        if (isReset || isDrilldown) {
+            // Reset to Main View (Show Card, Hide Chart)
+            chartContainer.style.display = 'none';
+            cardSection.style.display = 'flex';
+            drilldownBreadcrumb.style.display = 'none';
+            isDrilldown = false;
+        } else {
+            // Show Drilldown Chart
+            cardSection.style.display = 'none';
+            chartContainer.style.display = 'flex';
+            drilldownBreadcrumb.style.display = 'inline';
+
+            var drilldownOption = {
+                grid: { top: 50, bottom: 80, left: 50, right: 20 }, // Adjusted bottom spacing
+                xAxis: {
+                    type: 'category',
+                    data: ['On Time', '1-3 Days', '4-8 Days', '> 8 Days'],
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 20,  // Rotating labels slightly
+                        margin: 10
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    splitLine: { show: false },
+                    axisLabel: { margin: 10 }
+                },
+                series: [{
+                    type: 'bar',
+                    name: 'Delivered Jobs',
+                    data: [16, 2, 1, 1],
+                    itemStyle: {
+                        color: function (params) {
+                            return ['#4285F4', '#34A853', '#FBBC05', '#EA4335'][params.dataIndex];
+                        }
+                    },
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: '{c}'
+                    }
+                }],
+                tooltip: { trigger: 'axis' }
+            };
+
+            chart.setOption(drilldownOption);
+            isDrilldown = true;
+        }
+    }
+  </script>
+
+</body>
+</html>
